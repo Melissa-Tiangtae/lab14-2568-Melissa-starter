@@ -39,7 +39,7 @@ export default function MarathonModal({ opened, onClose }: MarathonModalProps) {
     setConfirmPassword,
     setHaveCoupon,
     setCouponCode,
-    discountCoupon,
+
     reset,
   } = useMarathonFormStore();
 
