@@ -28,7 +28,7 @@ export default function Sidebar() {
           to="/MarathonRegisterPage2"
         />
       </Box>
-      <Box p={10}>
+       <Box p={10}>
         <Group>
           <Indicator
             inline
@@ -38,10 +38,14 @@ export default function Sidebar() {
             color="red"
             withBorder
           >
-            <Avatar size="md" radius="xl" src="/charliebrown.jpg" />
+             <Avatar
+              radius="xl"
+              src="/MELISSAPIC.jpg"
+      
+            />
           </Indicator>
           <Text component={RouterNavLink} to="/">
-            User : Chanadda : Admin
+            User : Melissa : Student
           </Text>
         </Group>
       </Box>

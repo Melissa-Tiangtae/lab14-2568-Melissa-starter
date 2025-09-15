@@ -26,11 +26,20 @@ export default function MarathonModal({ opened, onClose }: MarathonModalProps) {
     plan,
     gender,
     email,
+    password,
+    confirmPassword,
+    haveCoupon,
+    couponCode,
     setFname,
     setLname,
     setPlan,
     setGender,
     setEmail,
+    setPassword,
+    setConfirmPassword,
+    setHaveCoupon,
+    setCouponCode,
+    discountCoupon,
     reset,
   } = useMarathonFormStore();
 
@@ -43,6 +52,10 @@ export default function MarathonModal({ opened, onClose }: MarathonModalProps) {
       gender,
       agree,
       email,
+      password,
+      confirmPassword,
+      haveCoupon,
+      couponCode,
     },
     validate: zod4Resolver(marathonSchema),
     validateInputOnChange: true,
@@ -52,6 +65,7 @@ export default function MarathonModal({ opened, onClose }: MarathonModalProps) {
 
   const onSubmitRegister = () => {
     //  alert หลังจาก กด Register
+    alert("Registered! See you at CMU Marathon");
     onClose();
     reset();
   };
@@ -99,16 +113,30 @@ export default function MarathonModal({ opened, onClose }: MarathonModalProps) {
             }}
             error={mantineForm.errors.email}
           />
-          {/* PasswordInput */}
+        
           <PasswordInput
             label="Password"
-            description="Password must contain 6-12 charaters"
+            description="Password must contain 6-12 characters"
             withAsterisk
+            value={password}
+            onChange={(e) => {
+              setPassword(e.currentTarget.value);
+              mantineForm.setFieldValue("password", e.currentTarget.value);
+            }}
+            error={mantineForm.errors.password}
           />
+          
+         
           <PasswordInput
             label="Confirm Password"
             description="Confirm Password"
             withAsterisk
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.currentTarget.value);
+              mantineForm.setFieldValue("confirmPassword", e.currentTarget.value);
+            }}
+            error={mantineForm.errors.confirmPassword}
           />
           <Select
             label="Plan"
@@ -149,12 +177,55 @@ export default function MarathonModal({ opened, onClose }: MarathonModalProps) {
           <Alert color="blue" title="Promotion 📢">
             Coupon (30% Discount)
           </Alert>
-          {/* เลือกกรออก coupon ตรงนี้ */}
-          <Checkbox label="I have coupon" />
-          {/* จะต้องแสดงเมื่อกด เลือก I have coupon เท่านั้น*/}
-          <TextInput label="Coupon Code" />
-          {/* แสดงราคาการสมัครงานวิ่งตามแผนที่เลือก  */}
-          <Text>Total Payment : THB</Text>
+      
+             <Checkbox 
+            label="I have coupon" 
+            checked={haveCoupon}
+            onChange={(e) => {
+              setHaveCoupon(e.currentTarget.checked);
+              mantineForm.setFieldValue("haveCoupon", e.currentTarget.checked);
+           
+              if (!e.currentTarget.checked) {
+                setCouponCode("");
+                mantineForm.setFieldValue("couponCode", "");
+              }
+            }}
+          />
+          
+       
+          {haveCoupon && (
+            <TextInput 
+              label="Coupon Code" 
+              value={couponCode}
+              onChange={(e) => {
+                setCouponCode(e.currentTarget.value);
+                mantineForm.setFieldValue("couponCode", e.currentTarget.value);
+              }}
+              error={mantineForm.errors.couponCode}
+            />
+          )}
+          
+        <Text>
+            Total Payment : {
+              
+              (() => {
+                let price = 0;
+                switch (plan) {
+                  case "funrun": price = 500; break;
+                  case "mini": price = 800; break;
+                  case "half": price = 1200; break;
+                  case "full": price = 1500; break;
+                  default: price = 0;
+                }
+              
+                if (haveCoupon && couponCode.trim() === "CMU2025") {
+                  price = price * 0.7;
+                }
+                return price;
+              })()
+            } THB
+          </Text>
+          
           <Divider my="xs" variant="dashed" />
           <Checkbox
             label={
